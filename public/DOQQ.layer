@@ -1,0 +1,37 @@
+	LAYER
+		NAME 'DOQQ'
+
+		STATUS OFF
+
+
+		CONNECTIONTYPE PLUGIN
+		PLUGIN "/ms4w/Apache/SpecialPlugins/msplugin_mssql2008.dll"
+		CONNECTION "Server=GISTest05; Database=Edr20; Trusted_Connection=true;"
+
+		DATA "Shape(geography) FROM dbo.vwDOQQ USING UNIQUE ID USING SRID=4326"
+
+		TYPE POLYGON
+
+		EXTENT -159.00 17.00 -65.00 72.00
+
+		MAXSCALEDENOM 1000000
+
+		PROJECTION 'init=epsg:4326'
+
+		CLASS
+            STYLE
+                COLOR 200 200 200
+				#OUTLINECOLOR 0 0 0
+			END
+		END
+
+		METADATA
+			WMS_TITLE 'DOQQ'
+			WMS_ABSTRACT USGS DOQQ
+
+			WMS_SRS EPSG:4326
+			#WMS_INCLUDE_ITEMS #@WMS_INCLUDE_ITEMS
+
+            #wms_include_items all
+		END
+	END

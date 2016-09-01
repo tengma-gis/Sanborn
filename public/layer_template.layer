@@ -1,0 +1,37 @@
+	LAYER
+		NAME #@layerName
+
+		STATUS #@Status
+
+
+		CONNECTIONTYPE PLUGIN
+		PLUGIN "/ms4w/Apache/SpecialPlugins/msplugin_mssql2008.dll"
+		CONNECTION "Server=GISTest05; Database=Edr20; Trusted_Connection=true;"
+
+		DATA "Shape(geography) FROM dbo.vwDOQQ USING UNIQUE ID USING SRID=4326"
+
+		TYPE #@TYPE
+
+		#EXTENT #@EXTENT
+
+		#MAXSCALEDENOM #@MAXSCALEDENOM
+
+		#PROJECTION #@PROJECTION
+
+		CLASS
+            STYLE
+                #COLOR #@COLOR
+				#OUTLINECOLOR 0 0 0
+			END
+		END
+
+		METADATA
+			#WMS_TITLE #@WMS_TITLE
+			#WMS_ABSTRACT #@WMS_ABSTRACT
+
+			#WMS_SRS #@WMS_SRS
+			#WMS_INCLUDE_ITEMS #@WMS_INCLUDE_ITEMS
+
+            #wms_include_items all
+		END
+	END

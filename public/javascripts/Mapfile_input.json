@@ -1,0 +1,86 @@
+{
+  "mapSetting": {
+    "NAME": "'DOQQ'",
+    "STATUS": "ON",
+    "IMAGETYPE": "PNG24",
+    "UNITS": "dd",
+    "EXTENT":"-159.00 17.00 -65.00 72.00",
+    "PROJECTION":"init=epsg:4326",
+    "DEBUG":"2"
+  },
+  "mapWebsetting":{
+    "IMAGEPATH":"'/ms4w/tmp/ms_tmp'",
+    "IMAGEURL":"'/ms_tmp/'",
+    "TEMPLATE":"'template.html'",
+    "METADATA":{
+      "WMS_TITLE":"'DOQQ'",
+      "WMS_ABSTRACT":"'USGIS DOQQ'",
+      "WMS_ONLINERESOURCE":"'http://GISAppsdevawvc2:8080/cgi-bin/mapserv.exe?map=/ms4w/apps/Edr20/DOQQ.map&'",
+      "WMS_SRS":"'EPSG:4326 EPSG:4269 EPSG:3857 EPSG:900913 EPSG:102100'",
+      "WMS_ENABLE_REQUEST":"'GetCapabilities DescribeLayer GetMap GetLegendGraphic GetFeatureInfo'",
+      "WMS_FEATURE_INFO_MIME_TYPE":"'text/html'"
+    }
+  },
+  "layers":[
+    {
+      "layer": {
+        "layerName": "'DOQQ2'",
+        "Status": "ON",
+        "DUMP": "TRUE",
+        "CONNECTIONTYPE": "PLUGIN",
+        "DATA": "'Shape(geography) FROM dbo.vwDOQQ USING UNIQUE ID USING SRID=4326'",
+        "TYPE": "POLYGON",
+        "EXTENT": "-159.00 17.00 -65.00 72.00",
+        "PROJECTION": "'init=epsg:4326'",
+        "MAXSCALEDENOM": "1000000",
+        "CLASS": [
+          {
+            "NAME": "'DOQQ'",
+            "STYLE": [
+              {
+                "COLOR": "200 200 200",
+                "WIDTH": "2.4"
+              }
+            ]
+          }
+        ],
+        "METADATA": {
+          "WMS_TITLE": "'DOQQ'",
+          "WMS_ABSTRACT": "USGS DOQQ",
+          "WMS_SRS": "EPSG:4326",
+          "WMS_INCLUDE_ITEMS": "'ID,State,Quadrangle_Name,Quadrant,Source_Image_ID,Source_Image_Date,Source_Image_Date_Text,ImageSource'"
+        }
+      }
+    },
+    {
+      "layer": {
+        "layerName": "'DOQQ'",
+        "Status": "OFF",
+        "DUMP": "TRUE",
+        "CONNECTIONTYPE": "PLUGIN",
+        "DATA": "'Shape(geography) FROM dbo.vwDOQQ USING UNIQUE ID USING SRID=4326'",
+        "TYPE": "POLYGON",
+        "EXTENT": "-159.00 17.00 -65.00 72.00",
+        "PROJECTION": "'init=epsg:4326'",
+        "MAXSCALEDENOM": "1000000",
+        "CLASS": [
+          {
+            "NAME": "'DOQQ'",
+            "STYLE": [
+              {
+                "COLOR": "200 200 200",
+                "WIDTH": "2.4"
+              }
+            ]
+          }
+        ],
+        "METADATA": {
+          "WMS_TITLE": "'DOQQ'",
+          "WMS_ABSTRACT": "USGS DOQQ",
+          "WMS_SRS": "EPSG:4326",
+          "MWS_INCLUDE_ITEMS": "'ID,State,Quadrangle_Name,Quadrant,Source_Image_ID,Source_Image_Date,Source_Image_Date_Text,ImageSource'"
+        }
+      }
+    }
+  ]
+}

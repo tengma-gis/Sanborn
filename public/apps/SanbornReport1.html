@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<!--
+* Created by TMa on 5/22/2016.*
+-->
+<html>
+<head>
+    <title>Sanborn, by Teng Ma ,EDR.Inc</title>
+    <meta charset="utf-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+
+    <link
+            rel="stylesheet"
+            href="http://leaflet.github.io/Leaflet.draw/leaflet.draw.css"
+    />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+</head>
+
+<body>
+<div>
+    <textarea id="GMLTextarea" style="width:800px;height:200px">GML Here</textarea>
+    <input type="button" value="Display GML" onclick="DisplayGML()"/>
+</div>
+
+
+<div id="mapid" style="width: 800px; height: 800px"></div>
+
+
+<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+
+<script src="http://leaflet.github.io/Leaflet.draw/leaflet.draw.js"></script>
+
+<script src="https://cdn.rawgit.com/ghybs/Leaflet.FeatureGroup.SubGroup/v1.0.0/dist/leaflet.featuregroup.subgroup-src.js"></script>
+
+<script src="https://api.mapbox.com/mapbox.js/plugins/turf/v2.0.2/turf.min.js"></script>
+
+<script>
+
+    viewpoint_latlng = [41.2544,-72.8962];
+
+    var mymap = new L.map('mapid',{crs: L.CRS.EPSG3857}).setView(viewpoint_latlng, 13);
+
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw', {
+        maxZoom: 18,
+             id: 'mapbox.streets'
+    }).addTo(mymap);
+
+    // parentItems will be master feature group to store all the user input including result before and after editing (used of roll back and roll forward)
+    // targetItems are target property point feature group
+    // maskItems are
+    var parentItems = new L.FeatureGroup(),
+            targetItems = new L.FeatureGroup(),
+            maskItems = new L.featureGroup(),
+            otherItems = new L.featureGroup();
+
+
+
+    var drawControl = new L.Control.Draw({
+        position: 'topright',
+        edit: {
+            featureGroup: targetItems
+        },
+        draw: {
+            polygon: {
+                allowIntersection: false, // Restricts shapes to simple polygons
+                drawError: {
+                    color: '#e1e100', // Color the shape will turn when intersects
+                    message: '<strong>Oh snap!<strong> you can\'t draw that!' // Message that will show when intersect
+                },
+                shapeOptions: {
+                    color: '#bada55'
+                }
+            }
+        }
+    });
+
+    mymap.addControl(drawControl);
+
+    mymap.on('draw:created', function (e) {
+
+        var type = e.layerType,
+                layer = e.layer;
+
+        // As per our business logic, there would be only on TP. Old Target will be removed when add new target
+        if(targetItems.getLayers().length>0){
+            targetItems.removeLayer(getLeafletID(targetItems)[0]);
+            //console.log('Removed old tp');
+        }
+
+
+        targetItems.addLayer(layer);
+
+
+        if(maskItems.getLayers().length > 0)
+        {
+            maskItems.clearLayers();
+        }
+
+        // default
+        if(type == 'marker'){
+            maskItems.addLayer(DefaultMask(layer, 1, "miles"));
+        }
+        else{
+            var targetPolygon = targetItems.toGeoJSON().features[0];
+            //console.log(turf.buffer(targetPolygon,1,"miles"));
+            maskItems.addLayer(L.geoJson(turf.buffer(targetPolygon,1,"miles")));
+        };
+
+        // Display TP and Mask
+        mymap.addLayer(targetItems);
+        mymap.addLayer(maskItems);
+
+
+        ////////////
+        //todo: make sure just one mask layer, store the previous
+     //   console.log(maskItems.getLayers());
+      //  console.log(getLeafletID(parentItems));
+        //console.log(getLeafletID(maskItems));
+    });
+
+    mymap.on('draw:deleted',function (e){
+        var layersDeleted = e.layers;
+        var totalDelete = getLeafletID(e.layers).length;
+
+        for(i=0; i< totalDelete; i++) {
+            //get the delete layer id
+             console.log(getLeafletID(layersDeleted)[i]);
+           // console.log(parentItems.getLayers()[i]);
+              console.log(maskItems.getLayers());
+
+            /////////////////  which layer group to delete  ////
+            //
+            //remove the layer from the group
+            maskItems.removeLayer(getLeafletID(layersDeleted)[i]);
+            console.log(maskItems.getLayers());
+
+        }
+    }
+    );
+
+    mymap.on('draw:edited', function (e) {
+        var layers = e.layers;
+
+
+        layers.eachLayer(function (layer) {
+                //remove mask and apply new default mask
+
+            maskItems.clearLayers();
+            maskItems.addLayer(DefaultMask(layer,1,"miles"));
+        });
+    });
+
+    function getLeafletID(glayers){
+        return Object.keys(glayers._layers);
+    }
+
+    function DefaultMask(Target_Layers,default_dist,units){
+        TP_lat = Target_Layers._latlng.lat;
+        TP_lng = Target_Layers._latlng.lng;
+
+        buffer = getBuffers(TP_lat,TP_lng,default_dist,units);
+        return L.geoJson(buffer);
+
+    }
+
+    var getBuffers =function getBuffer(xx,yy,dist,units){
+        var Point = turf.point([yy,xx]);
+
+        var buffered = turf.buffer(Point,dist,units);
+        return buffered;
+
+    };
+
+
+// todo: GML object to Geojson then add to map
+    function DisplayGML(){
+
+        gmltext = document.getElementById("GMLTextarea").value;
+
+        console.log(escape(gmltext));
+    }
+
+</script>
+</body>
+</html>

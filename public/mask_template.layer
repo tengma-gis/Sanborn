@@ -1,0 +1,20 @@
+LAYER
+	 NAME #@NAME
+	 STATUS OFF
+	 TYPE POLYGON
+	 FEATURE
+
+		WKT "#@WKT"
+
+		TEXT "Mask"
+	END
+	CLASS
+		STYLE
+			COLOR 255 255 255
+			OPACITY 30
+            OUTLINECOLOR 0 0 255
+            WIDTH 5
+		END
+
+	END
+END
